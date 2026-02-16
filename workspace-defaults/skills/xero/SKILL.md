@@ -1,6 +1,11 @@
 ---
 name: xero
 description: Xero API integration for accounting data including bank balances, invoices, bills, and financial reports. Use when the user asks about cash position, accounts receivable/payable, or any Xero financial data.
+metadata:
+  {
+    "openclaw":
+      { "requires": { "env": ["HAS_XERO"] } },
+  }
 ---
 
 # Xero API Documentation
@@ -18,8 +23,10 @@ import requests
 # Step 1: Get fresh Xero token from Balance's token proxy
 BALANCE_API = os.environ.get("BALANCE_API_URL", "")
 CLIENT_ID = os.environ.get("CLIENT_ID", "")
+GATEWAY_TOKEN = os.environ.get("OPENCLAW_GATEWAY_TOKEN", "")
 token_resp = requests.get(
     f"{BALANCE_API}/clients/{CLIENT_ID}/xero-token",
+    headers={"Authorization": f"Bearer {GATEWAY_TOKEN}"},
     timeout=10,
 )
 token_resp.raise_for_status()
@@ -29,6 +36,7 @@ TENANT_ID = xero_creds["tenant_id"]
 ```
 
 If this returns 404, the client has no Xero connection. Tell the user to connect Xero first.
+If this returns 401 or 403, the gateway token is invalid or missing — this is an infrastructure issue, not a user problem.
 
 ## Making API Calls
 

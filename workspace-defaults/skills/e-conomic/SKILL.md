@@ -1,6 +1,11 @@
 ---
 name: e-conomic
 description: E-conomic accounting API (Danish ERP). Use for financial questions - cash, invoices, payments, customer/supplier data, journal entries.
+metadata:
+  {
+    "openclaw":
+      { "requires": { "env": ["HAS_ECONOMIC"] } },
+  }
 ---
 
 # E-conomic API
